@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ScaleObjectOnShoot : MonoBehaviour
+{
+    public float scaleFactor = 2.0f; // Adjust this value to control the scale factor.
+    public bool scaleOnX = true;
+    public bool scaleOnY = true;
+    public bool scaleOnZ = true;
+    public string playerTag = "Projectile"; // Define the Projectile tag in the inspector.
+
+    private Vector3 originalScale;
+
+    private void Start()
+    {
+        originalScale = transform.localScale;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag(playerTag)) // Use the specified player tag.
+        {
+            // Scale up the object based on the selected axes when the player enters the trigger zone.
+            Vector3 newScale = originalScale;
+
+            if (scaleOnX)
+                newScale.x *= scaleFactor;
+            if (scaleOnY)
+                newScale.y *= scaleFactor;
+            if (scaleOnZ)
+                newScale.z *= scaleFactor;
+
+            transform.localScale = newScale;
+        }
+    }
+}
