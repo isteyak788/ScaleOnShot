@@ -1,0 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ProjectileShooter : MonoBehaviour
+{
+    public GameObject projectilePrefab;  // The projectile prefab you want to shoot.
+    public Transform firePoint;  // The position from which the projectile will be fired.
+    public float speed = 10.0f;  // Speed of the projectile.
+    public bool continuousFire = false;  // Toggle for continuous fire.
+    public float continuousFireRate = 5.0f;  // Bullets per second for continuous fire.
+
+    private float nextFireTime;
+
+    private void Update()
+    {
+        if (continuousFire)
+        {
+            if (Input.GetButton("Fire1") && Time.time >= nextFireTime)
+            {
+                Shoot();
+                nextFireTime = Time.time + 1.0f / continuousFireRate;
+            }
+        }
+        else
+        {
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Shoot();
+            }
+        }
+    }
+
+    private void Shoot()
+    {
+        GameObject newProjectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        Rigidbody rb = newProjectile.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            // Adjust the projectile's velocity based on the speed parameter.
+            rb.velocity = firePoint.forward * speed;
+        }
+        else
+        {
+            Debug.LogError("ProjectilePrefab must have a Rigidbody component.");
+        }
+    }
+}
